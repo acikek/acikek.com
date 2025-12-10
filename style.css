@@ -1,12 +1,23 @@
-@import url("https://fonts.googleapis.com/css2?family=Volkhov:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Volkhov:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
-/*:root {
-	color-scheme: light dark;
-}*/
+:root {
+	/*color-scheme: light dark;*/
+	--white: #f2edeb;
+	--black: #04030f;
+	--red: #8b2635;
+	--pink: #ef798a;
+	--blue: #1a535c;
+}
 
 * {
 	font-family: "Merriweather", serif;
 	font-style: normal;
+	color: var(--black);
+}
+
+::selection {
+	background-color: var(--black);
+	color: var(--white);
 }
 
 body {
@@ -14,14 +25,16 @@ body {
 	margin-left: 3cm;
 	margin-right: 3cm;
 	padding-bottom: 1cm;
+	background-color: var(--white);
 }
 
 h1 {
-	color: brown;
+	color: var(--red);
 }
 
 h2 {
 	font-style: italic;
+	margin-bottom: 0.25cm;
 }
 
 hr {
@@ -29,19 +42,23 @@ hr {
 	margin-bottom: 0.5cm;
 }
 
+a {
+	color: var(--red);
+}
+
+a:hover {
+	color: var(--pink);
+}
+
 .header {
 	text-align: center;
-	/*margin-bottom: 0.5cm;*/
 }
 
 .header h1 {
 	margin-bottom: 0cm;
 }
 
-.menu-item {
-	color: brown
-}
-
 .update-item p {
+	margin-top: 0pt;
 	margin-left: 0.5cm;
 }
