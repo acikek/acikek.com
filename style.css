@@ -1,0 +1,47 @@
+@import url("https://fonts.googleapis.com/css2?family=Volkhov:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+
+/*:root {
+	color-scheme: light dark;
+}*/
+
+* {
+	font-family: "Merriweather", serif;
+	font-style: normal;
+}
+
+body {
+	margin-top: 1cm;
+	margin-left: 3cm;
+	margin-right: 3cm;
+	padding-bottom: 1cm;
+}
+
+h1 {
+	color: brown;
+}
+
+h2 {
+	font-style: italic;
+}
+
+hr {
+	margin-top: 0.5cm;
+	margin-bottom: 0.5cm;
+}
+
+.header {
+	text-align: center;
+	/*margin-bottom: 0.5cm;*/
+}
+
+.header h1 {
+	margin-bottom: 0cm;
+}
+
+.menu-item {
+	color: brown
+}
+
+.update-item p {
+	margin-left: 0.5cm;
+}
