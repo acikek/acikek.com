@@ -10,6 +10,10 @@ const homepage = fs.readFileSync("src/index.html");
 const blog = fs.readFileSync("src/blog.html");
 const stylesheet = fs.readFileSync("src/style.css");
 
+const favicon = fs.readFileSync("images/favicon.svg");
+const logo = fs.readFileSync("images/logo.svg");
+const title = fs.readFileSync("images/title.svg");
+
 const updates = fs.readdirSync("updates")
 	.map(filename => {
 		const date = moment(path.basename(filename, ".html"));
@@ -44,6 +48,18 @@ server.addListener("request", (req, res) => {
 	else if (req.url === "/blog") {
 		res.writeHead(200, { "content-type": "text/html" });
 		res.end(blog);
+	}
+	else if (req.url === "/favicon.ico") {
+		res.writeHead(200, { "content-type": "image/svg+xml" });
+		res.end(favicon);
+	}
+	else if (req.url === "/logo.svg") {
+		res.writeHead(200, { "content-type": "image/svg+xml" });
+		res.end(logo);
+	}
+	else if (req.url === "/title.svg") {
+		res.writeHead(200, { "content-type": "image/svg+xml" });
+		res.end(title);
 	}
 });
 
