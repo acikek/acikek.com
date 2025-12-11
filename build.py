@@ -1,11 +1,14 @@
 import shutil
 from pathlib import Path
 
+SRC_FOLDER = 'src'
+UPDATES_FOLDER = 'updates'
+BUILD_FOLDER = '.build'
+
 HOMEPAGE = 'index.html'
 STYLESHEET = 'style.css'
-UPDATES_FOLDER = 'updates'
+
 UPDATES_PLACEHOLDER = "<!--#UPDATES-->"
-BUILD_FOLDER = '.build'
 
 def update_to_div(filename: str, content: str) -> str:
 	'''
@@ -17,7 +20,7 @@ def make_homepage() -> str | None:
 	'''
 	combines `HOMEPAGE` and the contents of the `UPDATES_FOLDER`
 	'''
-	homepage_path = Path.cwd() / HOMEPAGE
+	homepage_path = Path(SRC_FOLDER) / HOMEPAGE
 	if not homepage_path.exists():
 		print('index.html not found')
 		return
@@ -27,7 +30,7 @@ def make_homepage() -> str | None:
 			print(f'placeholder {UPDATES_PLACEHOLDER} not found in index.html')
 			return
 		# compile updates folder
-		updates_path = Path.cwd() / UPDATES_FOLDER
+		updates_path = Path(UPDATES_FOLDER)
 		if not updates_path.exists():
 			print('updates folder not found')
 			return
@@ -42,7 +45,7 @@ def make_homepage() -> str | None:
 def build():
 	build_path = Path(BUILD_FOLDER)
 	# copy stylesheet
-	shutil.copy2(STYLESHEET, build_path / STYLESHEET)
+	shutil.copy2(Path(SRC_FOLDER) / STYLESHEET, build_path / STYLESHEET)
 	# make homepage and write to build dir
 	if (homepage := make_homepage()) is not None:
 		with open(build_path / HOMEPAGE, "w") as out:
