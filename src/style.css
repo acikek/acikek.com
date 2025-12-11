@@ -3,7 +3,7 @@
 :root {
 	/*color-scheme: light dark;*/
 	--white: #f2edeb;
-	--gray: #e8e9ed;
+	--gray: #babcd9;
 	--black: #04030f;
 	--red: #8b2635;
 	--pink: #ef798a;
@@ -35,13 +35,11 @@ h1 {
 
 h2 {
 	font-style: italic;
-	margin-bottom: 0.25cm;
 }
 
 hr {
 	margin-top: 0.5cm;
 	margin-bottom: 0.5cm;
-	border-color: var(--gray);
 }
 
 a {
@@ -52,15 +50,48 @@ a:hover {
 	color: var(--pink);
 }
 
-.header {
+a i:hover {
+	color: var(--red)
+}
+
+#header {
 	text-align: center;
 }
 
-.header h1 {
+#header h1 {
 	margin-bottom: 0cm;
 }
 
-.update p {
+#menu {
+	color: var(--gray)
+}
+
+.update h2 {
+	margin: 0
+}
+
+.update h2+div {
+	margin-top: 0.5em
+}
+
+.update div {
 	margin-top: 0pt;
 	margin-left: 0.5cm;
+}
+
+.update p {
+	margin: 0pt;
+}
+
+.update p+p {
+	margin-top: 0.5em;
+}
+
+.update+.update {
+	margin-top: 0.5cm
+}
+
+.rb {
+	color: var(--red);
+	font-weight: 700;
 }

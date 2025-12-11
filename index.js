@@ -7,6 +7,7 @@ import moment from "moment"
 const UPDATES_PLACEHOLDER = "<!--#UPDATES-->";
 
 const homepage = fs.readFileSync("src/index.html");
+const blog = fs.readFileSync("src/blog.html");
 const stylesheet = fs.readFileSync("src/style.css");
 
 const updates = fs.readdirSync("updates")
@@ -16,7 +17,7 @@ const updates = fs.readdirSync("updates")
 		return [date, content];
 	})
 	.sort((a, b) => a[0].isBefore(b[0]) ? 1 : -1)
-	.map(pair => `<div class="update"><h2>${pair[0].format("MMMM Do, YYYY")}</h2><p>${pair[1]}</p></div>`)
+	.map(pair => `<div class="update"><h2>${pair[0].format("MMMM Do, YYYY")}</h2><div>${pair[1]}</div></div>`)
 	.join("");
 
 const index = homepage.toString().replace(UPDATES_PLACEHOLDER, updates);
@@ -27,6 +28,10 @@ const server = http.createServer((req, res) => {
 	}
 });
 
+const routes = {
+	"/": index,
+}
+
 server.addListener("request", (req, res) => {
 	if (req.url === "/") {
 		res.writeHead(200, { "content-type": "text/html" });
@@ -35,6 +40,10 @@ server.addListener("request", (req, res) => {
 	else if (req.url === "/style.css") {
 		res.writeHead(200, { "content-type": "text/css" });
 		res.end(stylesheet);
+	}
+	else if (req.url === "/blog") {
+		res.writeHead(200, { "content-type": "text/html" });
+		res.end(blog);
 	}
 });
 
