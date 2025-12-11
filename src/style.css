@@ -3,6 +3,7 @@
 :root {
 	/*color-scheme: light dark;*/
 	--white: #f2edeb;
+	--gray: #e8e9ed;
 	--black: #04030f;
 	--red: #8b2635;
 	--pink: #ef798a;
@@ -40,6 +41,7 @@ h2 {
 hr {
 	margin-top: 0.5cm;
 	margin-bottom: 0.5cm;
+	border-color: var(--gray);
 }
 
 a {
@@ -58,7 +60,7 @@ a:hover {
 	margin-bottom: 0cm;
 }
 
-.update-item p {
+.update p {
 	margin-top: 0pt;
 	margin-left: 0.5cm;
 }

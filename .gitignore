@@ -1,5 +1,2 @@
-# content
-updates
-
-# artifacts
-.build
+node_modules
+package-lock.json
