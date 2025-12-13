@@ -1,3 +1,15 @@
+#blogpost-title h1 {
+	margin-bottom: 0pt;
+}
+
+#blogpost-title {
+	margin-bottom: 1.5em;
+}
+
+#blogpost-title summary {
+	font-style: italic;
+}
+
 .blogpost {
 	text-indent: 2em;
 	line-height: 2em;

@@ -33,17 +33,21 @@ function getBlogposts() {
 			const parts = noExtension.split("_", /*limit:*/ 2);
 			const date = moment(parts[0]);
 			const title = parts[1];
-			const content = fs.readFileSync(`blogposts/${filename}`);
+			const content = fs.readFileSync(`blogposts/${filename}`).toString();
 			return { date, title, content };
 		})
 		.sort((a, b) => a.date.isBefore(b.date) ? 1 : -1)
 		.map(blogpost => {
 			const id = blogpost.title.toLowerCase().replace(" ", "-").replace(/[^0-9a-z\-]/g, "");
+			const metadataString = /<!--(.*)-->/gm.exec(blogpost.content)?.[1];
+			const metadata = metadataString ? JSON.parse(metadataString) : null;
 			const page = template
 				.replaceAll("$title", blogpost.title)
 				.replace("$date", blogpost.date.format("MMMM Do, YYYY"))
 				.replace("$content", blogpost.content)
-			return [id, page];
+				.replace("$show_summary", !!(metadata?.summary))
+				.replace("$summary", metadata?.summary)
+			return [id, { page, metadata }];
 		});
 	return Object.fromEntries(blogpostEntries);
 }
@@ -94,7 +98,7 @@ server.on("request", (req, res) => {
 	if (args[0] === "blog") {
 		if (args.length > 1 && Object.hasOwn(blogposts, args[1])) {
 			res.writeHead(200, { "content-type": "text/html" });
-			res.end(blogposts[args[1]]);
+			res.end(blogposts[args[1]].page);
 			return;
 		}
 	}
