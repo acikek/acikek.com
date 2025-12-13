@@ -67,6 +67,8 @@ const images = Object.fromEntries(
 );
 
 const homepage = getHomepage();
+const projects = fs.readFileSync("templates/projects.html");
+const blog = fs.readFileSync("templates/blog.html");
 const blogposts = getBlogposts();
 
 const server = http.createServer();
@@ -94,10 +96,21 @@ server.on("request", (req, res) => {
 		res.end(homepage);
 		return;
 	}
+	if (args[0] === "projects") {
+		if (args.length == 1) {
+			res.writeHead(200, { "content-type": "text/html" });
+			res.end(projects);
+		}
+	}
 	if (args[0] === "blog") {
 		if (args.length > 1 && Object.hasOwn(blogposts, args[1])) {
 			res.writeHead(200, { "content-type": "text/html" });
 			res.end(blogposts[args[1]].page);
+			return;
+		}
+		else if (args.length == 1) {
+			res.writeHead(200, { "content-type": "text/html" });
+			res.end(blog);
 			return;
 		}
 	}

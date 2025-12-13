@@ -92,6 +92,7 @@ a i:hover {
 }
 
 .menu-item {
+	text-align: center;
 	color: var(--gray)
 }
 
