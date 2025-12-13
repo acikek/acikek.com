@@ -7,6 +7,7 @@ import moment from "moment"
 // TODO: minify
 // TODO: error handling
 // TODO: reverse proxy
+// TODO: better logging
 
 function getUpdateHtml(date, content) {
 	const heading = date.format("MMMM Do, YYYY");
@@ -80,9 +81,9 @@ server.on("request", (req, res) => {
 		res.end(styles[args.at(-1)]);
 		return;
 	}
-	if (path.endsWith(".svg") && Object.hasOwn(images, path)) {
+	if (path.endsWith(".svg") && Object.hasOwn(images, args.at(-1))) {
 		res.writeHead(200, { "content-type": "image/svg+xml" });
-		res.end(images[path]);
+		res.end(images[args.at(-1)]);
 		return;
 	}
 	if (args.length == 0) {
