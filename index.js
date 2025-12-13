@@ -5,10 +5,12 @@ import path from "node:path";
 import moment from "moment"
 
 // TODO: minify
+// TODO: error handling
+// TODO: reverse proxy
 
-function getUpdateHtml(date, text) {
+function getUpdateHtml(date, content) {
 	const heading = date.format("MMMM Do, YYYY");
-	return `<div class="update"><h2>${heading}</h2><div>${text}</div></div>`;
+	return `<div class="update"><h2>${heading}</h2><div>${content}</div></div>`;
 }
 
 function getUpdates() {
@@ -16,10 +18,33 @@ function getUpdates() {
 		.map(filename => {
 			const date = moment(path.basename(filename, ".html"));
 			const content = fs.readFileSync(`updates/${filename}`);
-			return [date, content];
+			return { date, content };
 		})
-		.sort((a, b) => a[0].isBefore(b[0]) ? 1 : -1)
-		.map(pair => getUpdateHtml(pair[0], pair[1]));
+		.sort((a, b) => a.date.isBefore(b.date) ? 1 : -1)
+		.map(update => getUpdateHtml(update.date, update.content));
+}
+
+function getBlogposts() {
+	const template = fs.readFileSync("templates/blogpost.html").toString();
+	const blogpostEntries = fs.readdirSync("blogposts")
+		.map(filename => {
+			const noExtension = path.basename(filename, ".html");
+			const parts = noExtension.split("_", /*limit:*/ 2);
+			const date = moment(parts[0]);
+			const title = parts[1];
+			const content = fs.readFileSync(`blogposts/${filename}`);
+			return { date, title, content };
+		})
+		.sort((a, b) => a.date.isBefore(b.date) ? 1 : -1)
+		.map(blogpost => {
+			const id = blogpost.title.toLowerCase().replace(" ", "-").replace(/[^0-9a-z\-]/g, "");
+			const page = template
+				.replaceAll("$title", blogpost.title)
+				.replace("$date", blogpost.date.format("MMMM Do, YYYY"))
+				.replace("$content", blogpost.content)
+			return [id, page];
+		});
+	return Object.fromEntries(blogpostEntries);
 }
 
 function getHomepage() {
@@ -38,21 +63,18 @@ const images = Object.fromEntries(
 );
 
 const homepage = getHomepage();
+const blogposts = getBlogposts();
 
-const server = http.createServer((req, res) => {
-	if (req.method !== null) {
-		console.log(`[${moment().format("HH:mm:ss")}] ${req.method} ${req.url}`);
-	}
-});
+const server = http.createServer();
 
-server.addListener("request", (req, res) => {
+server.on("request", (req, res) => {
 	if (req.url === null || req.method !== "GET") {
 		return;
 	}
 	const url = new URL(`http://${process.env.HOST ?? 'localhost'}${req.url}`);
 	const args = url.pathname.split("/").slice(1).filter(arg => arg.length > 0);
 	const path = args.join("/");
-	console.log(args);
+	console.log(`[${moment().format("HH:mm:ss")}] ${req.method} ${req.url} (path: ${path || "empty"}, args: [${args.join(", ")}])`);
 	if (path.endsWith(".css") && Object.hasOwn(styles, args.at(-1))) {
 		res.writeHead(200, { "content-type": "text/css" });
 		res.end(styles[args.at(-1)]);
@@ -63,15 +85,17 @@ server.addListener("request", (req, res) => {
 		res.end(images[path]);
 		return;
 	}
-	if (path === "/") {
+	if (args.length == 0) {
 		res.writeHead(200, { "content-type": "text/html" });
 		res.end(homepage);
 		return;
 	}
-	if (path === "blog") {
-		res.writeHead(200, { "content-type": "text/html" });
-		res.end(fs.readFileSync("templates/blogpost.html"));
-		return;
+	if (args[0] === "blog") {
+		if (args.length > 1 && Object.hasOwn(blogposts, args[1])) {
+			res.writeHead(200, { "content-type": "text/html" });
+			res.end(blogposts[args[1]]);
+			return;
+		}
 	}
 });
 
