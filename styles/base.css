@@ -99,45 +99,7 @@ a i:hover {
 	padding-left: 1em;
 }
 
-.update h2 {
-	margin: 0
-}
-
-.update h2+div {
-	margin-top: 0.5em
-}
-
-.update div {
-	margin-top: 0pt;
-	margin-left: 0.5cm;
-}
-
-.update p {
-	margin: 0pt;
-}
-
-.update p+p {
-	margin-top: 0.5em;
-}
-
-.update+.update {
-	margin-top: 0.5cm
-}
-
 .rb {
 	color: var(--red);
 	font-weight: 700;
-}
-
-.blogpost {
-	text-indent: 2em;
-	line-height: 2em;
-}
-
-.blogpost p {
-	margin: 0
-}
-
-.blogpost-section+.blogpost-section {
-	padding-top: 2em;
 }

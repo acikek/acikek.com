@@ -1,0 +1,12 @@
+.blogpost {
+	text-indent: 2em;
+	line-height: 2em;
+}
+
+.blogpost p {
+	margin: 0
+}
+
+.blogpost-section+.blogpost-section {
+	padding-top: 2em;
+}
