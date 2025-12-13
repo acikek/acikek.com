@@ -1,0 +1,11 @@
+.blog-entry h2 {
+	margin: 0pt
+}
+
+.blog-entry h2+* {
+	padding-top: 0.5em;
+}
+
+.blog-entry+.blog-entry {
+	padding-top: 0.5cm;
+}
