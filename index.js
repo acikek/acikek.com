@@ -45,8 +45,7 @@ function getBlogposts() {
 				.replaceAll("$title", blogpost.title)
 				.replace("$date", blogpost.date.format("MMMM Do, YYYY"))
 				.replace("$content", blogpost.content)
-				.replace("$show_summary", !!(metadata?.summary))
-				.replace("$summary", metadata?.summary)
+				.replace("$summary", metadata?.summary ? `<summary>${metadata.summary}</summary>` : "");
 			return [id, { page, metadata }];
 		});
 	return Object.fromEntries(blogpostEntries);

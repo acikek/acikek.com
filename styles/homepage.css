@@ -13,6 +13,7 @@
 
 .update p {
 	margin: 0pt;
+	line-height: 1.5em;
 }
 
 .update p+p {
