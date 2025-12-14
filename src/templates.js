@@ -4,6 +4,7 @@ const templates = {
 	components: {
 		blogEntryThumbnail: fs.readFileSync("templates/components/blog-entry-thumbnail.html").toString(),
 		blogEntry: fs.readFileSync("templates/components/blog-entry.html").toString(),
+		project: fs.readFileSync("templates/components/project.html").toString(),
 		update: fs.readFileSync("templates/components/update.html").toString()
 	},
 	pages: {

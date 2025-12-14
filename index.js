@@ -2,10 +2,11 @@ import http from "node:http";
 import fs from "node:fs";
 
 import moment from "moment";
+import colors from "yoctocolors";
 
 import { getBlogPage, getBlogpostEntries } from "./src/blog.js";
-import templates from "./src/templates.js";
 import { getHomepage } from "./src/main-page.js";
+import { getProjectsPage } from "./src/projects.js";
 
 const style = fs.readFileSync("style.css");
 
@@ -15,7 +16,7 @@ const images = Object.fromEntries(
 );
 
 const homepage = getHomepage();
-const projects = templates.pages.base;
+const projects = getProjectsPage();
 
 const blogpostEntries = getBlogpostEntries();
 const blog = getBlogPage(blogpostEntries);
@@ -30,7 +31,8 @@ server.on("request", (req, res) => {
 	const url = new URL(`http://${process.env.HOST ?? 'localhost'}${req.url}`);
 	const args = url.pathname.split("/").slice(1).filter(arg => arg.length > 0);
 	const path = args.join("/");
-	console.log(`[${moment().format("HH:mm:ss")}] ${req.method} ${req.url} (path: ${path || "empty"}, args: [${args.join(", ")}])`);
+	const debugString = `(path: ${path || "empty"}, args: [${args.join(", ")}])`;
+	console.log(`[${moment().format("HH:mm:ss")}] ${colors.green(req.method)} ${req.url} ${colors.gray(debugString)}`);
 	if (path === "style.css") {
 		res.writeHead(200, { "content-type": "text/css" });
 		res.end(style);
