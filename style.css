@@ -108,7 +108,7 @@ a i:hover {
 }
 
 .update h2+div {
-	margin-top: 0.5em
+	padding-top: 0.5em
 }
 
 .update div {
@@ -122,15 +122,32 @@ a i:hover {
 }
 
 .update p+p {
-	margin-top: 0.5em;
+	padding-top: 0.5em;
 }
 
 .update+.update {
-	margin-top: 0.5cm
+	padding-top: 0.5cm
 }
 
 .blog-entry {
 	display: flex;
+}
+
+.blog-entry-content {
+	width: 100%;
+}
+
+.blog-entry-content * {
+	text-decoration: none;
+}
+
+.blog-entry-content h2 {
+	text-decoration: underline;
+	color: var(--red);
+}
+
+.blog-entry-content:hover h2 {
+	color: var(--pink)
 }
 
 .blog-entry-thumbnail {
