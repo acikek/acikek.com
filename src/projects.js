@@ -3,10 +3,19 @@ import fs from "node:fs";
 import { getMainHeader } from "./main-page.js";
 import templates from "./templates.js";
 
+function getProject(link, thumbnail, name, description) {
+	return templates.components.project
+		.replace("$link", link)
+		.replace("$thumbnail", thumbnail)
+		.replace("$name", name)
+		.replace("$description", description);
+}
+
 function getProjects() {
 	return fs.readdirSync("projects")
-		.map(filename => fs.readFileSync(`projects/${filename}`))
-		.map(file => templates.components.project);
+		.map(filename => JSON.parse(fs.readFileSync(`projects/${filename}`)))
+		.sort((a, b) => a.name.localeCompare(b.name))
+		.map(data => getProject(data.link, data.thumbnail, data.name, data.description));
 }
 
 export function getProjectsPage() {

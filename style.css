@@ -140,7 +140,6 @@ a i:hover {
 	flex-direction: column;
 	aspect-ratio: 16 / 9;
 	background-color: var(--off-white);
-	/*outline: 10pt auto var(--blue);*/
 	border-radius: 10pt;
 	overflow: hidden;
 	text-decoration: none;
