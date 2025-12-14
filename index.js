@@ -1,93 +1,13 @@
 import http from "node:http";
 import fs from "node:fs";
-import path from "node:path";
 
-import moment from "moment"
+import moment from "moment";
 
-// TODO: minify
-// TODO: error handling
-// TODO: reverse proxy
-// TODO: better logging
+import { getBlogPage, getBlogpostEntries } from "./src/blog.js";
+import templates from "./src/templates.js";
+import { getHomepage } from "./src/main-page.js";
 
-function getUpdateHtml(date, content) {
-	const heading = date.format("MMMM Do, YYYY");
-	return `<div class="update"><h2>${heading}</h2><div>${content}</div></div>`;
-}
-
-function getUpdates() {
-	return fs.readdirSync("updates")
-		.map(filename => {
-			const date = moment(path.basename(filename, ".html"));
-			const content = fs.readFileSync(`updates/${filename}`);
-			return { date, content };
-		})
-		.sort((a, b) => a.date.isBefore(b.date) ? 1 : -1)
-		.map(update => getUpdateHtml(update.date, update.content));
-}
-
-function getBlogposts() {
-	const template = fs.readFileSync("templates/blogpost.html").toString();
-	const blogpostEntries = fs.readdirSync("blogposts")
-		.map(filename => {
-			const noExtension = path.basename(filename, ".html");
-			const parts = noExtension.split("_", /*limit:*/ 2);
-			const date = moment(parts[0]);
-			const title = parts[1];
-			const content = fs.readFileSync(`blogposts/${filename}`).toString();
-			return { date, title, content };
-		})
-		.sort((a, b) => a.date.isBefore(b.date) ? 1 : -1)
-		.map(blogpost => {
-			const id = blogpost.title.toLowerCase().replaceAll(" ", "-").replaceAll(/[^0-9a-z\-]/g, "");
-			const dateString = blogpost.date.format("MMMM Do, YYYY");
-			const metadataString = /<!--(.*)-->/gm.exec(blogpost.content)?.[1];
-			const metadata = metadataString ? JSON.parse(metadataString) : null;
-			const page = template
-				.replaceAll("$title", blogpost.title)
-				.replace("$date", dateString)
-				.replace("$content", blogpost.content)
-				.replace("$summary", metadata?.summary ? `<summary>${metadata.summary}</summary>` : "");
-			return [id, { ...blogpost, dateString, metadata, page }];
-		});
-	return Object.fromEntries(blogpostEntries);
-}
-
-function getBlogpostThumbnail(path) {
-	return `<div class="blog-entry-thumbnail"><img src="${path}" alt="thumbnail"></div>`;
-}
-
-function getBlogEntry(id, post) {
-	const thumbnail = post.metadata?.thumbnail ? getBlogpostThumbnail(post.metadata.thumbnail) : "";
-	const summary = post.metadata?.summary ? `• <span>${post.metadata.summary}</span>` : "";
-	return `<div class="blog-entry">
-		${thumbnail}
-		<div>
-			<h2><a href="/blog/${id}">${post.title}</a></h2>
-			<div class="menu">
-				<span style="font-style: italic;">${post.dateString}</span>
-				${summary}
-			</div>
-		</div>
-	</div>`;
-}
-
-function getBlogPage(blogposts) {
-	const template = fs.readFileSync("templates/blog.html").toString();
-	const blogEntries = Object.entries(blogposts)
-		.map(pair => getBlogEntry(pair[0], pair[1]))
-		.join("");
-	return template.replace("$entries", blogEntries);
-}
-
-function getHomepage() {
-	const rawPage = fs.readFileSync("templates/homepage.html");
-	return rawPage.toString().replace("$updates", getUpdates().join("\n"));
-}
-
-const styles = Object.fromEntries(
-	fs.readdirSync("styles")
-		.map(filename => [filename, fs.readFileSync(`styles/${filename}`)])
-);
+const style = fs.readFileSync("style.css");
 
 const images = Object.fromEntries(
 	fs.readdirSync("images")
@@ -95,9 +15,11 @@ const images = Object.fromEntries(
 );
 
 const homepage = getHomepage();
-const projects = fs.readFileSync("templates/projects.html");
-const blogposts = getBlogposts();
-const blog = getBlogPage(blogposts);
+const projects = templates.pages.base;
+
+const blogpostEntries = getBlogpostEntries();
+const blog = getBlogPage(blogpostEntries);
+const blogposts = Object.fromEntries(blogpostEntries);
 
 const server = http.createServer();
 
@@ -109,9 +31,9 @@ server.on("request", (req, res) => {
 	const args = url.pathname.split("/").slice(1).filter(arg => arg.length > 0);
 	const path = args.join("/");
 	console.log(`[${moment().format("HH:mm:ss")}] ${req.method} ${req.url} (path: ${path || "empty"}, args: [${args.join(", ")}])`);
-	if (path.endsWith(".css") && Object.hasOwn(styles, args.at(-1))) {
+	if (path === "style.css") {
 		res.writeHead(200, { "content-type": "text/css" });
-		res.end(styles[args.at(-1)]);
+		res.end(style);
 		return;
 	}
 	if (path.endsWith(".svg") && Object.hasOwn(images, args.at(-1))) {
