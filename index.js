@@ -38,17 +38,45 @@ function getBlogposts() {
 		})
 		.sort((a, b) => a.date.isBefore(b.date) ? 1 : -1)
 		.map(blogpost => {
-			const id = blogpost.title.toLowerCase().replace(" ", "-").replace(/[^0-9a-z\-]/g, "");
+			const id = blogpost.title.toLowerCase().replaceAll(" ", "-").replaceAll(/[^0-9a-z\-]/g, "");
+			const dateString = blogpost.date.format("MMMM Do, YYYY");
 			const metadataString = /<!--(.*)-->/gm.exec(blogpost.content)?.[1];
 			const metadata = metadataString ? JSON.parse(metadataString) : null;
 			const page = template
 				.replaceAll("$title", blogpost.title)
-				.replace("$date", blogpost.date.format("MMMM Do, YYYY"))
+				.replace("$date", dateString)
 				.replace("$content", blogpost.content)
 				.replace("$summary", metadata?.summary ? `<summary>${metadata.summary}</summary>` : "");
-			return [id, { page, metadata }];
+			return [id, { ...blogpost, dateString, metadata, page }];
 		});
 	return Object.fromEntries(blogpostEntries);
+}
+
+function getBlogpostThumbnail(path) {
+	return `<div class="blog-entry-thumbnail"><img src="${path}" alt="thumbnail"></div>`;
+}
+
+function getBlogEntry(id, post) {
+	const thumbnail = post.metadata?.thumbnail ? getBlogpostThumbnail(post.metadata.thumbnail) : "";
+	const summary = post.metadata?.summary ? `• <span>${post.metadata.summary}</span>` : "";
+	return `<div class="blog-entry">
+		${thumbnail}
+		<div>
+			<h2><a href="/blog/${id}">${post.title}</a></h2>
+			<div class="menu">
+				<span style="font-style: italic;">${post.dateString}</span>
+				${summary}
+			</div>
+		</div>
+	</div>`;
+}
+
+function getBlogPage(blogposts) {
+	const template = fs.readFileSync("templates/blog.html").toString();
+	const blogEntries = Object.entries(blogposts)
+		.map(pair => getBlogEntry(pair[0], pair[1]))
+		.join("");
+	return template.replace("$entries", blogEntries);
 }
 
 function getHomepage() {
@@ -68,8 +96,8 @@ const images = Object.fromEntries(
 
 const homepage = getHomepage();
 const projects = fs.readFileSync("templates/projects.html");
-const blog = fs.readFileSync("templates/blog.html");
 const blogposts = getBlogposts();
+const blog = getBlogPage(blogposts);
 
 const server = http.createServer();
 
