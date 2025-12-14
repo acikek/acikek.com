@@ -15,6 +15,8 @@ const images = Object.fromEntries(
 		.map(filename => [filename, fs.readFileSync(`images/${filename}`)])
 );
 
+const tools = fs.readFileSync("tools.txt").toString().split("\n");
+
 const homepage = getHomepage();
 const projects = getProjectsPage();
 
@@ -23,6 +25,12 @@ const blog = getBlogPage(blogpostEntries);
 const blogposts = Object.fromEntries(blogpostEntries);
 
 const server = http.createServer();
+
+function servePage(res, content) {
+	res.writeHead(200, { "content-type": "text/html" });
+	const tool = Math.random() > 0.25 ? "love" : tools[Math.floor(Math.random() * tools.length)];
+	res.end(content.replace("$_tool", tool));
+}
 
 server.on("request", (req, res) => {
 	if (req.url === null || req.method !== "GET") {
@@ -44,25 +52,21 @@ server.on("request", (req, res) => {
 		return;
 	}
 	if (args.length == 0) {
-		res.writeHead(200, { "content-type": "text/html" });
-		res.end(homepage);
+		servePage(res, homepage);
 		return;
 	}
 	if (args[0] === "projects") {
 		if (args.length == 1) {
-			res.writeHead(200, { "content-type": "text/html" });
-			res.end(projects);
+			servePage(res, projects);
 		}
 	}
 	if (args[0] === "blog") {
 		if (args.length > 1 && Object.hasOwn(blogposts, args[1])) {
-			res.writeHead(200, { "content-type": "text/html" });
-			res.end(blogposts[args[1]].page);
+			servePage(res, blogposts[args[1]].page);
 			return;
 		}
 		else if (args.length == 1) {
-			res.writeHead(200, { "content-type": "text/html" });
-			res.end(blog);
+			servePage(res, blog);
 			return;
 		}
 	}
