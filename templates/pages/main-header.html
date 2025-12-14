@@ -4,9 +4,9 @@
 		<img src="/images/title.svg" alt="acikek" style="height: 3em; padding-bottom: 10px;">
 	</div>
 
-	<div class="menu">
-		<a href="/">Home</a></strong> •
-		<a href="/projects">Projects</a> •
-		<a href="/blog">Blog</a>
+	<div class="menu" x-data="{ 'tab': $tab }">
+		<a :style="tab == 0 && { 'font-weight': 700 }" href="/">Home</a> •
+		<a :style="tab == 1 && { 'font-weight': 700 }" href="/projects">Projects</a> •
+		<a :style="tab == 2 && { 'font-weight': 700 }" href="/blog">Blog</a>
 	</div>
 </div>

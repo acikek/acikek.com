@@ -5,8 +5,8 @@ import moment from "moment";
 
 import templates from "./templates.js";
 
-export function getMainHeader() {
-	return templates.pages.mainHeader;
+export function getMainHeader(tab) {
+	return templates.pages.mainHeader.replace("$tab", tab);
 }
 
 function getUpdate(date, content) {
@@ -27,5 +27,5 @@ function getUpdates() {
 }
 
 export function getHomepage() {
-	return templates.getBasePage("acikek's page", getMainHeader(), getUpdates().join(""));
+	return templates.getBasePage("acikek's page", getMainHeader(0), getUpdates().join(""));
 }

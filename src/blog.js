@@ -57,5 +57,5 @@ export function getBlogPage(blogpostEntries) {
 		const summary = post.metadata.summary ? `• <span>${post.metadata.summary}</span>` : "";
 		return getBlogEntry(thumbnail, id, post.title, post.dateString, summary);
 	});
-	return templates.getBasePage("acikek's blog", getMainHeader(), blogEntries.join(""));
+	return templates.getBasePage("acikek's blog", getMainHeader(2), blogEntries.join(""));
 }
