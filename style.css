@@ -26,6 +26,10 @@ img::selection {
 	background-color: rgb(0, 0, 0, 0);
 }
 
+html {
+	scrollbar-gutter: stable both-edges;
+}
+
 body {
 	margin-top: 1cm;
 	margin-left: 3cm;
@@ -162,13 +166,18 @@ a i:hover {
 }
 
 .project-info h2 {
-	margin: 0pt;
+	margin-top: 0pt;
+	margin-bottom: 0.2em;
 	color: var(--red);
 	text-decoration: underline;
 }
 
 .project:hover h2 {
 	color: var(--pink)
+}
+
+.project-info summary {
+	font-size: 90%;
 }
 
 .blog-entry {
