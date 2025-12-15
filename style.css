@@ -85,7 +85,6 @@ a i:hover {
 	flex-wrap: wrap;
 	justify-content: space-between;
 	align-items: center;
-	row-gap: 0.5em;
 	font-size: clamp(70%, 4vw, 100%);
 	white-space: nowrap;
 }
@@ -94,6 +93,7 @@ a i:hover {
 	#footer {
 		flex-direction: column;
 		justify-content: center;
+		row-gap: 0.5em;
 		text-align: center;
 	}
 }
@@ -269,15 +269,27 @@ a i:hover {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-}
-
-.blogpost-menu-item {
-	text-align: center;
 	font-size: clamp(70%, 4vw, 100%);
+	white-space: nowrap;
 }
 
-.blogpost-menu-item+.blogpost-menu-item {
-	margin-left: 10pt;
+@media not (max-width: 600px) {
+	#blogpost-menu>* {
+		margin-left: 1em;
+	}
+}
+
+@media (max-width: 600px) {
+	#blogpost-menu {
+		flex-direction: column;
+		justify-content: center;
+		text-align: center;
+		row-gap: 0.25em;
+	}
+
+	#blogpost-menu-break {
+		display: none;
+	}
 }
 
 .blogpost {
