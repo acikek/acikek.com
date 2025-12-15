@@ -10,6 +10,7 @@ const templates = {
 	pages: {
 		base: fs.readFileSync("templates/pages/base.html").toString(),
 		blogpostHeader: fs.readFileSync("templates/pages/blogpost-header.html").toString(),
+		error: fs.readFileSync("templates/pages/error.html").toString(),
 		mainHeader: fs.readFileSync("templates/pages/main-header.html").toString()
 	}
 }
@@ -21,7 +22,12 @@ function getBasePage(title, header, content) {
 		.replace("$content", content);
 }
 
+function getErrorPage(error) {
+	return templates.pages.error.replaceAll("$error", error);
+}
+
 export default {
 	getBasePage,
+	getErrorPage,
 	...templates
 }

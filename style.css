@@ -31,10 +31,6 @@ html {
 }
 
 body {
-	margin-top: 1cm;
-	margin-left: 3cm;
-	margin-right: 3cm;
-	padding-bottom: 1cm;
 	background-color: var(--white);
 }
 
@@ -255,4 +251,21 @@ a i:hover {
 
 .blogpost-section+.blogpost-section {
 	padding-top: 2em;
+}
+
+.error {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+}
+
+.error * {
+	font-style: italic;
+}
+
+.error h1 {
+	font-size: 80pt;
+	margin: 0pt;
 }

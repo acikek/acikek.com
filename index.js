@@ -7,6 +7,7 @@ import colors from "yoctocolors";
 import { getBlogPage, getBlogpostEntries } from "./src/blog.js";
 import { getHomepage } from "./src/main-page.js";
 import { getProjectsPage } from "./src/projects.js";
+import templates from "./src/templates.js";
 
 const style = fs.readFileSync("style.css");
 
@@ -15,7 +16,7 @@ const images = Object.fromEntries(
 		.map(filename => [filename, fs.readFileSync(`images/${filename}`)])
 );
 
-const tools = fs.readFileSync("tools.txt").toString().split("\n");
+const tools = fs.readFileSync("tools.txt").toString().split("\n").filter(tool => tool.length > 0);
 
 const homepage = getHomepage();
 const projects = getProjectsPage();
@@ -25,6 +26,7 @@ const blog = getBlogPage(blogpostEntries);
 const blogposts = Object.fromEntries(blogpostEntries);
 
 const server = http.createServer();
+const allowedMethods = ["GET", "HEAD", "OPTIONS"];
 
 function servePage(res, content) {
 	res.writeHead(200, { "content-type": "text/html" });
@@ -33,7 +35,7 @@ function servePage(res, content) {
 }
 
 server.on("request", (req, res) => {
-	if (req.url === null || req.method !== "GET") {
+	if (!req.url || !req.method) {
 		return;
 	}
 	const url = new URL(`http://${process.env.HOST ?? 'localhost'}${req.url}`);
@@ -41,6 +43,11 @@ server.on("request", (req, res) => {
 	const path = args.join("/");
 	const debugString = `(path: ${path || "empty"}, args: [${args.join(", ")}])`;
 	console.log(`[${moment().format("HH:mm:ss")}] ${colors.green(req.method)} ${req.url} ${colors.gray(debugString)}`);
+	if (!allowedMethods.includes(req.method)) {
+		res.writeHead(405, { "allow": allowedMethods });
+		res.end();
+		return;
+	}
 	if (path === "style.css") {
 		res.writeHead(200, { "content-type": "text/css" });
 		res.end(style);
@@ -58,10 +65,11 @@ server.on("request", (req, res) => {
 	if (args[0] === "projects") {
 		if (args.length == 1) {
 			servePage(res, projects);
+			return;
 		}
 	}
 	if (args[0] === "blog") {
-		if (args.length > 1 && Object.hasOwn(blogposts, args[1])) {
+		if (args.length == 2 && Object.hasOwn(blogposts, args[1])) {
 			servePage(res, blogposts[args[1]].page);
 			return;
 		}
@@ -70,6 +78,8 @@ server.on("request", (req, res) => {
 			return;
 		}
 	}
+	res.writeHead(404, { "content-type": "text/html" });
+	res.end(templates.getErrorPage(404));
 });
 
 server.listen(8000);
