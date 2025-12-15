@@ -98,21 +98,11 @@ a i:hover {
 	}
 }
 
-.menu {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
+.bulleted {
 	font-size: clamp(0.75rem, 100%, 100%);
-	color: var(--gray);
 }
 
-.menu-item {
-	text-align: center;
-	text-wrap-mode: nowrap;
-	color: var(--gray)
-}
-
-.menu-item+.menu-item {
+.bulleted *+.bulleted * {
 	margin-left: 1em;
 }
 
@@ -210,6 +200,7 @@ a i:hover {
 .blog-entry-content h2 {
 	text-decoration: underline;
 	color: var(--red);
+	font-size: clamp(0.5em, 5vw, 1.5em);
 }
 
 .blog-entry-content:hover h2 {
@@ -231,20 +222,28 @@ a i:hover {
 	object-fit: contain;
 }
 
-.blog-entry-thumbnail+* {
-	padding-left: 1em;
+@media (width < 600px) {
+	.blog-entry-thumbnail {
+		display: none;
+	}
+}
+
+@media not (width < 600px) {
+	.blog-entry-thumbnail+* {
+		padding-left: 1em;
+	}
 }
 
 .blog-entry h2 {
-	margin: 0pt
+	margin: 0;
 }
 
 .blog-entry h2+* {
-	padding-top: 0.5em;
+	margin-top: 0.5em;
 }
 
 .blog-entry+.blog-entry {
-	padding-top: 0.5cm;
+	margin-top: 3vh;
 }
 
 #blogpost-title {

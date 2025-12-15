@@ -53,8 +53,8 @@ function getBlogEntry(thumbnail, id, title, dateString, summary) {
 export function getBlogPage(blogpostEntries) {
 	const blogEntries = blogpostEntries.map(pair => {
 		const [id, post] = pair;
-		const thumbnail = post.metadata.thumbnail ? getBlogEntryThumbnail(id, post.metadata.thumbnail) : "";
-		const summary = post.metadata.summary ? `• <span>${post.metadata.summary}</span>` : "";
+		const thumbnail = post.metadata.thumbnail ? getBlogEntryThumbnail(id, post.metadata.thumbnail) : `<div class="blog-entry-thumbnail-empty"></div>`;
+		const summary = post.metadata.summary ? `<span style="color: var(--gray)">•</span> <span>${post.metadata.summary}</span>` : "";
 		return getBlogEntry(thumbnail, id, post.title, post.dateString, summary);
 	});
 	return templates.getBasePage("acikek's blog", getMainHeader(2), blogEntries.join(""));
