@@ -51,10 +51,6 @@ a i:hover {
 	color: var(--red)
 }
 
-#header {
-	text-align: center;
-}
-
 #title {
 	display: flex;
 	align-items: center;
@@ -84,17 +80,27 @@ a i:hover {
 	padding-left: 1em;
 }
 
+#footer * {
+	font-size: clamp(0.5em, 1.0em, 1.5em);
+	text-overflow: ellipsis;
+}
+
 .menu {
-	color: var(--gray)
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	font-size: clamp(0.75rem, 100%, 100%);
+	color: var(--gray);
 }
 
 .menu-item {
 	text-align: center;
+	text-wrap-mode: nowrap;
 	color: var(--gray)
 }
 
 .menu-item+.menu-item {
-	padding-left: 1em;
+	margin-left: 1em;
 }
 
 .rb {
@@ -228,25 +234,47 @@ a i:hover {
 	padding-top: 0.5cm;
 }
 
-#blogpost-title h1 {
-	margin-bottom: 0pt;
+#blogpost-title {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-bottom: 1em;
+	text-align: center;
 }
 
-#blogpost-title {
-	margin-bottom: 1em;
+#blogpost-title h1 {
+	margin-top: 0;
+	margin-bottom: 0.5rem;
+	font-size: clamp(1em, 7.5vw, 2em);
 }
 
 #blogpost-title summary {
-	font-size: 90%;
+	font-size: clamp(70%, 3.5vw, 90%);
+}
+
+#blogpost-menu {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.blogpost-menu-item {
+	text-align: center;
+	font-size: clamp(70%, 4vw, 100%);
+}
+
+.blogpost-menu-item+.blogpost-menu-item {
+	margin-left: 10pt;
 }
 
 .blogpost {
 	text-indent: 2em;
 	line-height: 2em;
+	font-size: clamp(70%, 4vw, 100%);
 }
 
 .blogpost p {
-	margin: 0
+	margin: 0;
 }
 
 .blogpost-section+.blogpost-section {
