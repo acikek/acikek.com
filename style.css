@@ -35,8 +35,8 @@ body {
 }
 
 hr {
-	margin-top: 0.5cm;
-	margin-bottom: 0.5cm;
+	margin-top: 3vh;
+	margin-bottom: 3vh;
 }
 
 a {
@@ -80,9 +80,22 @@ a i:hover {
 	padding-left: 1em;
 }
 
-#footer * {
-	font-size: clamp(0.5em, 1.0em, 1.5em);
-	text-overflow: ellipsis;
+#footer {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: center;
+	row-gap: 0.5em;
+	font-size: clamp(70%, 4vw, 100%);
+	white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+	#footer {
+		flex-direction: column;
+		justify-content: center;
+		text-align: center;
+	}
 }
 
 .menu {
