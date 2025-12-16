@@ -1,5 +1,6 @@
 {
 	"name": "Slo",
 	"description": "Minecraft mod that loads servers as singleplayer worlds.",
-	"link": "https://modrinth.com/mod/slo"
+	"link": "https://modrinth.com/mod/slo",
+	"thumbnail": "/images/projects/slo.png"
 }

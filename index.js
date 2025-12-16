@@ -1,5 +1,6 @@
 import http from "node:http";
 
+import mime from "mime-types";
 import moment from "moment";
 import colors from "yoctocolors";
 
@@ -50,11 +51,6 @@ server.on("request", (req, res) => {
 		res.end(style);
 		return;
 	}
-	if ((path.endsWith(".svg") || path.endsWith(".png")) && Object.hasOwn(images, path)) {
-		res.writeHead(200, { "content-type": path.endsWith(".svg") ? "image/svg+xml" : "image/png" });
-		res.end(images[path]);
-		return;
-	}
 	if (args.length == 0) {
 		servePage(res, homepage);
 		return;
@@ -74,6 +70,11 @@ server.on("request", (req, res) => {
 			servePage(res, blog);
 			return;
 		}
+	}
+	if (Object.hasOwn(images, path)) {
+		res.writeHead(200, { "content-type": mime.lookup(path) });
+		res.end(images[path]);
+		return;
 	}
 	res.writeHead(404, { "content-type": "text/html" });
 	res.end(error404);

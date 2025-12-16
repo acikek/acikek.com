@@ -1,4 +1,6 @@
 import fs from "node:fs";
+import path from "node:path";
+
 import CleanCSS from "clean-css";
 
 export function getStyle() {
@@ -12,12 +14,15 @@ export function getImages() {
 	const entries = fs.readdirSync("images", { recursive: true, withFileTypes: true })
 		.filter(dirent => dirent.isFile())
 		.map(dirent => {
-			const id = `${dirent.parentPath}/${dirent.name}`;
+			const id = `${dirent.parentPath.replaceAll(path.sep, "/")}/${dirent.name}`;
 			return [id, fs.readFileSync(id)]
 		});
 	return Object.fromEntries(entries);
 }
 
 export function getTools() {
-	return fs.readFileSync("tools.txt").toString().split("\n").filter(tool => tool.length > 0);
+	return fs.readFileSync("tools.txt").toString()
+		.split("\n")
+		.map(tool => tool.trim())
+		.filter(tool => tool.length > 0);
 }

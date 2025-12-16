@@ -1,5 +1,6 @@
 {
 	"name": "Owop.NET",
 	"description": "Unofficial .NET wrapper for OurWorldOfPixels.",
-	"link": "https://github.com/nage-engine"
+	"link": "https://github.com/acikek/Owop.NET",
+	"thumbnail": "/images/projects/owopdotnet.png"
 }
