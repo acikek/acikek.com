@@ -18,7 +18,7 @@ function getAllProjectData() {
 		.map(data => getProject(data.link, data.thumbnail, data.name, data.description));
 }
 
-export function getProjectsPage() {
+export async function getProjectsPage() {
 	const content = templates.pages.projects.replace("$content", getAllProjectData().join(""));
-	return templates.getBasePage("acikek's projects", getMainHeader(1), content);
+	return await templates.getBasePage("acikek's projects", getMainHeader(1), content);
 }

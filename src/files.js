@@ -1,9 +1,11 @@
 import fs from "node:fs";
+import CleanCSS from "clean-css";
 
 export function getStyle() {
-	return fs.readdirSync("styles")
+	const combined = fs.readdirSync("styles")
 		.map(filename => fs.readFileSync(`styles/${filename}`).toString())
 		.join("\n");
+	return new CleanCSS().minify(combined).styles;
 }
 
 export function getImages() {

@@ -1,3 +1,4 @@
+import { minify } from "html-minifier-terser";
 import fs from "node:fs"
 
 function readTemplate(path) {
@@ -20,15 +21,21 @@ const templates = {
 	}
 }
 
-function getBasePage(title, header, content) {
-	return templates.pages.base
-		.replace("$title", title)
-		.replace("$header", header)
-		.replace("$content", content);
+const minifyOptions = {
+	minifyCSS: true,
+	removeAttributeQuotes: true,
+	collapseWhitespace: true
 }
 
-function getErrorPage(error) {
-	return templates.pages.error.replaceAll("$error", error);
+async function getBasePage(title, header, content) {
+	return await minify(templates.pages.base
+		.replace("$title", title)
+		.replace("$header", header)
+		.replace("$content", content), minifyOptions);
+}
+
+async function getErrorPage(error) {
+	return await minify(templates.pages.error.replaceAll("$error", error), minifyOptions);
 }
 
 export default {

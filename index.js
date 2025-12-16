@@ -13,12 +13,14 @@ const style = getStyle();
 const images = getImages();
 const tools = getTools();
 
-const homepage = getHomepage();
-const projects = getProjectsPage();
+const homepage = await getHomepage();
+const projects = await getProjectsPage();
 
-const blogpostEntries = getBlogpostEntries();
-const blog = getBlogPage(blogpostEntries);
+const blogpostEntries = await getBlogpostEntries();
+const blog = await getBlogPage(blogpostEntries);
 const blogposts = Object.fromEntries(blogpostEntries);
+
+const error404 = await templates.getErrorPage(404);
 
 const server = http.createServer();
 const allowedMethods = ["GET", "HEAD", "OPTIONS"];
@@ -74,7 +76,7 @@ server.on("request", (req, res) => {
 		}
 	}
 	res.writeHead(404, { "content-type": "text/html" });
-	res.end(templates.getErrorPage(404));
+	res.end(error404);
 });
 
 server.listen(8000);

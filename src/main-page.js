@@ -26,6 +26,6 @@ function getUpdates() {
 		.map(update => getUpdate(update.date, update.content));
 }
 
-export function getHomepage() {
-	return templates.getBasePage("acikek's page", getMainHeader(0), getUpdates().join(""));
+export async function getHomepage() {
+	return await templates.getBasePage("acikek's page", getMainHeader(0), getUpdates().join(""));
 }

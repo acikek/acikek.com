@@ -1,6 +1,5 @@
 # acikek.com
 
-- TODO: minify
 - TODO: error handling
 - TODO: reverse proxy
 - TODO: OPTION and HEAD requests
