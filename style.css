@@ -140,8 +140,41 @@ a i:hover {
 
 .projects {
 	display: grid;
-	grid-template-columns: 1fr 1fr 1fr;
 	gap: 15pt;
+}
+
+@media (width < 600px) {
+	.projects {
+		grid-template-columns: 1fr;
+	}
+
+	.project-info h2 {
+		font-size: clamp(0.5em, 5vw, 1.5em);
+	}
+}
+
+@media (width < 1200px) and (width >=600px) {
+	.projects {
+		grid-template-columns: 1fr 1fr;
+	}
+
+	.project-info h2 {
+		font-size: clamp(0.5em, 3vw, 1.5em);
+	}
+
+	.project-info summary {
+		font-size: clamp(70%, 2vw, 90%);
+	}
+}
+
+@media (width >=1200px) {
+	.projects {
+		grid-template-columns: 1fr 1fr 1fr;
+	}
+
+	.project-info summary {
+		font-size: clamp(70%, 3.5vw, 90%);
+	}
 }
 
 .project {
@@ -179,10 +212,6 @@ a i:hover {
 
 .project:hover h2 {
 	color: var(--pink)
-}
-
-.project-info summary {
-	font-size: 90%;
 }
 
 .blog-entry {
