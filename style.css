@@ -77,12 +77,12 @@ a i:hover {
 	cursor: grabbing;
 }
 
-#title img {
+.red-img {
 	filter: brightness(0) saturate(100%) invert(18%) sepia(34%) saturate(4030%) hue-rotate(328deg) brightness(93%) contrast(90%);
 }
 
 @media (prefers-color-scheme: dark) {
-	#title img {
+	.red-img {
 		filter: brightness(0) saturate(100%) invert(57%) sepia(80%) saturate(2754%) hue-rotate(314deg) brightness(90%) contrast(82%);
 	}
 }
@@ -343,6 +343,12 @@ a i:hover {
 
 .blogpost-section+.blogpost-section {
 	padding-top: 2em;
+}
+
+.signature {
+	height: 1em;
+	width: 1em;
+	vertical-align: baseline;
 }
 
 .error {

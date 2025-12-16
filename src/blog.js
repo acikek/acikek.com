@@ -10,8 +10,9 @@ function getBlogpost(title, summary, dateString, content) {
 	const header = templates.pages.blogpostHeader
 		.replace("$title", title)
 		.replace("$summary", summary ? `<summary>${summary}</summary>` : "")
-		.replace("$date", dateString)
-	return templates.getBasePage(`${title} - acikek's blog`, header, `<div class="blogpost">${content}</div>`);
+		.replace("$date", dateString);
+	const filled = content.replace("$signature", `<img class="red-img signature" src="/images/logo.svg">`);
+	return templates.getBasePage(`${title} - acikek's blog`, header, `<div class="blogpost">${filled}</div>`);
 }
 
 export function getBlogpostData(filename) {

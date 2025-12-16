@@ -1,5 +1,6 @@
 import http from "node:http";
 import fs from "node:fs";
+import path from "node:path";
 
 import moment from "moment";
 import colors from "yoctocolors";
@@ -12,8 +13,14 @@ import templates from "./src/templates.js";
 const style = fs.readFileSync("style.css");
 
 const images = Object.fromEntries(
-	fs.readdirSync("images")
-		.map(filename => [filename, fs.readFileSync(`images/${filename}`)])
+	fs.readdirSync("images", { recursive: true, withFileTypes: true })
+		.map(dirent => {
+			if (dirent.isFile()) {
+				const id = `${dirent.parentPath}/${dirent.name}`;
+				return [id, fs.readFileSync(id)]
+			}
+		})
+		.filter(data => data)
 );
 
 const tools = fs.readFileSync("tools.txt").toString().split("\n").filter(tool => tool.length > 0);
@@ -53,9 +60,9 @@ server.on("request", (req, res) => {
 		res.end(style);
 		return;
 	}
-	if ((path.endsWith(".svg") || path.endsWith(".png")) && Object.hasOwn(images, args.at(-1))) {
+	if ((path.endsWith(".svg") || path.endsWith(".png")) && Object.hasOwn(images, path)) {
 		res.writeHead(200, { "content-type": path.endsWith(".svg") ? "image/svg+xml" : "image/png" });
-		res.end(images[args.at(-1)]);
+		res.end(images[path]);
 		return;
 	}
 	if (args.length == 0) {
