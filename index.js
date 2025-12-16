@@ -24,7 +24,7 @@ const blogposts = Object.fromEntries(blogpostEntries);
 const error404 = await templates.getErrorPage(404);
 
 const server = http.createServer();
-const allowedMethods = ["GET", "HEAD", "OPTIONS"];
+const allowedMethods = ["GET", "HEAD", "OPTIONS"]; // TODO: OPTION and HEAD requests
 
 function servePage(res, content) {
 	res.writeHead(200, { "content-type": "text/html" });
