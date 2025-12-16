@@ -1,6 +1,4 @@
 import http from "node:http";
-import fs from "node:fs";
-import path from "node:path";
 
 import moment from "moment";
 import colors from "yoctocolors";
@@ -9,21 +7,11 @@ import { getBlogPage, getBlogpostEntries } from "./src/blog.js";
 import { getHomepage } from "./src/main-page.js";
 import { getProjectsPage } from "./src/projects.js";
 import templates from "./src/templates.js";
+import { getImages, getStyle, getTools } from "./src/files.js";
 
-const style = fs.readFileSync("style.css");
-
-const images = Object.fromEntries(
-	fs.readdirSync("images", { recursive: true, withFileTypes: true })
-		.map(dirent => {
-			if (dirent.isFile()) {
-				const id = `${dirent.parentPath}/${dirent.name}`;
-				return [id, fs.readFileSync(id)]
-			}
-		})
-		.filter(data => data)
-);
-
-const tools = fs.readFileSync("tools.txt").toString().split("\n").filter(tool => tool.length > 0);
+const style = getStyle();
+const images = getImages();
+const tools = getTools();
 
 const homepage = getHomepage();
 const projects = getProjectsPage();

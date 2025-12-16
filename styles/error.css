@@ -1,0 +1,16 @@
+.error {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+}
+
+.error * {
+	font-style: italic;
+}
+
+.error h1 {
+	font-size: 80pt;
+	margin: 0pt;
+}
