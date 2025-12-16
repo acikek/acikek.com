@@ -1,13 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Volkhov:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
 :root {
-	/*color-scheme: light dark;*/
-	--white: #f2edeb;
-	--off-white: #e7deDa;
-	--gray: #babcd9;
-	--black: #04030f;
-	--red: #8b2635;
-	--pink: #ef798a;
+	color-scheme: light dark;
+	--white: light-dark(#f2edeb, #22202f);
+	--off-white: light-dark(#e7deda, #1b1826);
+	--gray: light-dark(#babcd9, #2f2a43);
+	--black: light-dark(#04030f, #e3d4ce);
+	--red: light-dark(#8b2635, #d35f70);
+	--pink: light-dark(#ef798a, #f6b6c0);
 	--blue: #1a535c;
 }
 
@@ -15,6 +15,7 @@
 	font-family: "Merriweather", serif;
 	font-style: normal;
 	color: var(--black);
+	scrollbar-color: var(--gray) var(--off-white);
 }
 
 ::selection {
@@ -37,6 +38,10 @@ body {
 hr {
 	margin-top: 3vh;
 	margin-bottom: 3vh;
+	border-color: var(--gray);
+	background-color: var(--gray);
+	color: var(--gray);
+	border-width: 0.5px;
 }
 
 a {
@@ -74,6 +79,12 @@ a i:hover {
 
 #title img {
 	filter: brightness(0) saturate(100%) invert(18%) sepia(34%) saturate(4030%) hue-rotate(328deg) brightness(93%) contrast(90%);
+}
+
+@media (prefers-color-scheme: dark) {
+	#title img {
+		filter: brightness(0) saturate(100%) invert(57%) sepia(80%) saturate(2754%) hue-rotate(314deg) brightness(90%) contrast(82%);
+	}
 }
 
 #title img+img {
