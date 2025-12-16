@@ -11,7 +11,7 @@ function getProject(link, thumbnail, name, description) {
 		.replace("$description", description);
 }
 
-function getProjects() {
+function getAllProjectData() {
 	return fs.readdirSync("projects")
 		.map(filename => JSON.parse(fs.readFileSync(`projects/${filename}`)))
 		.sort((a, b) => a.name.localeCompare(b.name))
@@ -19,6 +19,6 @@ function getProjects() {
 }
 
 export function getProjectsPage() {
-	const content = `<div class="projects">${getProjects().join("")}</div>`;
+	const content = templates.pages.projects.replace("$content", getAllProjectData().join(""));
 	return templates.getBasePage("acikek's projects", getMainHeader(1), content);
 }

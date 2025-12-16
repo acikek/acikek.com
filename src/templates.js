@@ -1,17 +1,22 @@
 import fs from "node:fs"
 
+function readTemplate(path) {
+	return fs.readFileSync(`templates/${path}.html`).toString();
+}
+
 const templates = {
 	components: {
-		blogEntryThumbnail: fs.readFileSync("templates/components/blog-entry-thumbnail.html").toString(),
-		blogEntry: fs.readFileSync("templates/components/blog-entry.html").toString(),
-		project: fs.readFileSync("templates/components/project.html").toString(),
-		update: fs.readFileSync("templates/components/update.html").toString()
+		blogEntryThumbnail: readTemplate("components/blog-entry-thumbnail"),
+		blogEntry: readTemplate("components/blog-entry"),
+		project: readTemplate("components/project"),
+		update: readTemplate("components/update")
 	},
 	pages: {
-		base: fs.readFileSync("templates/pages/base.html").toString(),
-		blogpostHeader: fs.readFileSync("templates/pages/blogpost-header.html").toString(),
-		error: fs.readFileSync("templates/pages/error.html").toString(),
-		mainHeader: fs.readFileSync("templates/pages/main-header.html").toString()
+		base: readTemplate("pages/base"),
+		blogpostHeader: readTemplate("pages/blogpost-header"),
+		error: readTemplate("pages/error"),
+		mainHeader: readTemplate("pages/main-header"),
+		projects: readTemplate("pages/projects")
 	}
 }
 

@@ -53,8 +53,8 @@ server.on("request", (req, res) => {
 		res.end(style);
 		return;
 	}
-	if (path.endsWith(".svg") && Object.hasOwn(images, args.at(-1))) {
-		res.writeHead(200, { "content-type": "image/svg+xml" });
+	if ((path.endsWith(".svg") || path.endsWith(".png")) && Object.hasOwn(images, args.at(-1))) {
+		res.writeHead(200, { "content-type": path.endsWith(".svg") ? "image/svg+xml" : "image/png" });
 		res.end(images[args.at(-1)]);
 		return;
 	}
