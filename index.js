@@ -47,7 +47,7 @@ server.on("request", (req, res) => {
 		return;
 	}
 	if (path === "style.css") {
-		res.writeHead(200, { "content-type": "text/css" });
+		res.writeHead(200, { "content-type": "text/css", "cache-control": "public, max-age=31536000, immutable" });
 		res.end(style);
 		return;
 	}
@@ -72,7 +72,7 @@ server.on("request", (req, res) => {
 		}
 	}
 	if (Object.hasOwn(images, path)) {
-		res.writeHead(200, { "content-type": mime.lookup(path) });
+		res.writeHead(200, { "content-type": mime.lookup(path), "cache-control": "public, max-age=31536000, immutable" });
 		res.end(images[path]);
 		return;
 	}
