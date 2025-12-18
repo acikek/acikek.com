@@ -75,6 +75,7 @@ footer {
 		justify-content: center;
 		row-gap: 0.5em;
 		text-align: center;
+		white-space: wrap;
 	}
 }
 
