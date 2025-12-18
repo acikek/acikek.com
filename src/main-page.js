@@ -27,5 +27,5 @@ function getUpdates() {
 }
 
 export async function getHomepage() {
-	return await templates.getBasePage("acikek's page", getMainHeader(0), getUpdates().join(""));
+	return await templates.getBasePage("acikek's page", "acikek's personal website!", "", getMainHeader(0), getUpdates().join(""));
 }

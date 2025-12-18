@@ -20,5 +20,5 @@ function getAllProjectData() {
 
 export async function getProjectsPage() {
 	const content = templates.pages.projects.replace("$content", getAllProjectData().join(""));
-	return await templates.getBasePage("acikek's projects", getMainHeader(1), content);
+	return await templates.getBasePage("acikek's projects", "Projects created by acikek and friends.", "projects", getMainHeader(1), content);
 }

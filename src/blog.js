@@ -6,13 +6,13 @@ import moment from "moment";
 import templates from "./templates.js";
 import { getMainHeader } from "./main-page.js";
 
-async function getBlogpost(title, summary, dateString, content) {
+async function getBlogpost(id, title, summary, dateString, content) {
 	const header = templates.pages.blogpostHeader
 		.replace("$title", title)
 		.replace("$summary", summary ? `<summary>${summary}</summary>` : "")
 		.replace("$date", dateString);
 	const filled = content.replace("$signature", `<img class="red-img signature" src="/images/logo.svg">`);
-	return await templates.getBasePage(`${title} - acikek's blog`, header, `<div class="blogpost">${filled}</div>`);
+	return await templates.getBasePage(`${title} - acikek's blog`, summary || "", `blog/${id}`, header, `<div class="blogpost">${filled}</div>`);
 }
 
 export async function getBlogpostData(filename) {
@@ -25,7 +25,7 @@ export async function getBlogpostData(filename) {
 	const date = moment(filenameParts[0]);
 	const dateString = date.format("MMMM Do, YYYY");
 	const id = title.toLowerCase().replaceAll(" ", "-").replaceAll(/[^0-9a-z\-]/g, "");
-	const page = await getBlogpost(title, metadata.summary, dateString, content);
+	const page = await getBlogpost(id, title, metadata.summary, dateString, content);
 	return { id, title, date, dateString, page, metadata };
 }
 
@@ -58,5 +58,5 @@ export async function getBlogPage(blogpostEntries) {
 		const summary = post.metadata.summary ? `<span style="color: var(--gray)">•</span> <span>${post.metadata.summary}</span>` : "";
 		return getBlogEntry(thumbnail, id, post.title, post.dateString, summary);
 	});
-	return await templates.getBasePage("acikek's blog", getMainHeader(2), blogEntries.join(""));
+	return await templates.getBasePage("acikek's blog", "Blogposts written by acikek and friends.", "blog", getMainHeader(2), blogEntries.join(""));
 }

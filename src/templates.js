@@ -27,9 +27,11 @@ const minifyOptions = {
 	collapseWhitespace: true
 }
 
-async function getBasePage(title, header, content) {
+async function getBasePage(title, description, path, header, content) {
 	return await minify(templates.pages.base
-		.replace("$title", title)
+		.replaceAll("$title", title)
+		.replace("$description", description)
+		.replace("$path", path)
 		.replace("$header", header)
 		.replace("$content", content), minifyOptions);
 }
