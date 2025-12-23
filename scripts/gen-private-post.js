@@ -7,7 +7,7 @@ import path from "node:path";
 
 import moment from "moment";
 
-import { getBlogpostData } from "../src/blog.js";
+import { getBlogpostData, PRIVATE_KEYS_PATH } from "../src/blog.js";
 
 if (argv.length < 3) {
 	console.log("err: provide blogpost id");
@@ -36,14 +36,12 @@ let keys = {
 	}
 }
 
-const keysPath = "private-blogpost-keys.json";
-
-if (fs.existsSync(keysPath)) {
+if (fs.existsSync(PRIVATE_KEYS_PATH)) {
 	keys = {
 		...keys,
-		...JSON.parse(fs.readFileSync(keysPath).toString())
+		...JSON.parse(fs.readFileSync(PRIVATE_KEYS_PATH).toString())
 	};
 }
 
-fs.writeFileSync(keysPath, JSON.stringify(keys, null, 4));
+fs.writeFileSync(PRIVATE_KEYS_PATH, JSON.stringify(keys, null, 4));
 console.log(`https://acikek.com/blog/${postData.id}/${postKey}`);
