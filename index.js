@@ -1,4 +1,5 @@
 import http from "node:http";
+import fs from "node:fs"
 
 import mime from "mime-types";
 import moment from "moment";
@@ -10,6 +11,8 @@ import { getProjectsPage } from "./src/projects.js";
 import templates from "./src/templates.js";
 import { getImages, getStyle, getTools } from "./src/files.js";
 
+const PRIVATE_BLOGPOST_LIFETIME = 2 * 24 * 60 * 60 * 1000;
+
 const style = getStyle();
 const images = getImages();
 const tools = getTools();
@@ -17,7 +20,8 @@ const tools = getTools();
 const homepage = await getHomepage();
 const projects = await getProjectsPage();
 
-const blogpostEntries = await getBlogpostEntries();
+const blogpostEntries = await getBlogpostEntries("blogposts");
+const privateBlogposts = Object.fromEntries(await getBlogpostEntries("private-blogposts"));
 const blog = await getBlogPage(blogpostEntries);
 const blogposts = Object.fromEntries(blogpostEntries);
 
@@ -30,6 +34,40 @@ function servePage(res, content) {
 	res.writeHead(200, { "content-type": "text/html" });
 	const tool = Math.random() > 0.25 ? "love" : tools[Math.floor(Math.random() * tools.length)];
 	res.end(content.replace("$_tool", tool));
+}
+
+function tryServePrivateBlogpost(res, args) {
+	if (!fs.existsSync("private-blogpost-keys.json")) {
+		return false;
+	}
+	const keysFile = fs.readFileSync("private-blogpost-keys.json");
+	try {
+		const keys = JSON.parse(keysFile.toString());
+		if (!(args[2] in keys)) {
+			return false;
+		}
+		const keyData = keys[args[2]];
+		if (!Object.hasOwn(privateBlogposts, args[1])) {
+			return false;
+		}
+		const pageData = privateBlogposts[args[1]];
+		if (!("file" in keyData) || pageData.path != keyData.file) {
+			return false;
+		}
+		const withinLifetime = keyData["created-at"] !== undefined
+			&& moment().diff(moment.unix(keyData["created-at"])) < PRIVATE_BLOGPOST_LIFETIME;
+		delete keys[args[2]];
+		fs.writeFileSync("private-blogpost-keys.json", JSON.stringify(keys, null, 4));
+		if (!withinLifetime) {
+			return false;
+		}
+		servePage(res, pageData.page);
+		return true;
+	}
+	catch (e) {
+		console.error(e);
+		return false;
+	}
 }
 
 server.on("request", (req, res) => {
@@ -62,7 +100,12 @@ server.on("request", (req, res) => {
 		}
 	}
 	if (args[0] === "blog") {
-		if (args.length == 2 && Object.hasOwn(blogposts, args[1])) {
+		if (args.length == 3 && Object.hasOwn(privateBlogposts, args[1])) {
+			if (tryServePrivateBlogpost(res, args)) {
+				return;
+			}
+		}
+		else if (args.length == 2 && Object.hasOwn(blogposts, args[1])) {
 			servePage(res, blogposts[args[1]].page);
 			return;
 		}

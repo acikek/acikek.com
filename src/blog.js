@@ -15,22 +15,29 @@ async function getBlogpost(id, title, summary, dateString, content) {
 	return await templates.getBasePage(`${title} - acikek's blog`, summary || "", `blog/${id}`, header, `<div class="blogpost">${filled}</div>`);
 }
 
-export async function getBlogpostData(filename) {
+async function _getBlogpostData(filename, source) {
+
+}
+
+export async function getBlogpostData(source, filename) {
 	const noExtension = path.basename(filename, ".html");
 	const filenameParts = noExtension.split("_", 2);
 	const title = filenameParts[1];
-	const content = fs.readFileSync(`blogposts/${filename}`).toString();
+	const content = fs.readFileSync(`${source}/${filename}`).toString();
 	const metadataString = /<!--(.*)-->/gm.exec(content)?.[1];
 	const metadata = metadataString ? JSON.parse(metadataString) : {};
 	const date = moment(filenameParts[0]);
 	const dateString = date.format("MMMM Do, YYYY");
 	const id = title.toLowerCase().replaceAll(" ", "-").replaceAll(/[^0-9a-z\-]/g, "");
 	const page = await getBlogpost(id, title, metadata.summary, dateString, content);
-	return { id, title, date, dateString, page, metadata };
+	return { id, title, date, dateString, page, metadata, path: `${source}/${filename}` };
 }
 
-export async function getBlogpostEntries() {
-	const data = await Promise.all(fs.readdirSync("blogposts").map(getBlogpostData));
+export async function getBlogpostEntries(source) {
+	const data = await Promise.all(
+		fs.readdirSync(source)
+			.map(filename => getBlogpostData(source, filename))
+	);
 	return data
 		.sort((a, b) => a.date.isBefore(b.date) ? 1 : -1)
 		.map(post => [post.id, post]);
@@ -59,4 +66,8 @@ export async function getBlogPage(blogpostEntries) {
 		return getBlogEntry(thumbnail, id, post.title, post.dateString, summary);
 	});
 	return await templates.getBasePage("acikek's blog", "Blogposts written by acikek and friends.", "blog", getMainHeader(2), blogEntries.join(""));
+}
+
+export async function getPrivateKeyData(key) {
+	const data = JSON.parse(fs.readFileSync("private-blogpost-keys.json"));
 }
