@@ -15,10 +15,6 @@ async function getBlogpost(id, title, summary, dateString, content) {
 	return await templates.getBasePage(`${title} - acikek's blog`, summary || "", `blog/${id}`, header, `<div class="blogpost">${filled}</div>`);
 }
 
-async function _getBlogpostData(filename, source) {
-
-}
-
 export async function getBlogpostData(source, filename) {
 	const noExtension = path.basename(filename, ".html");
 	const filenameParts = noExtension.split("_", 2);
@@ -66,8 +62,4 @@ export async function getBlogPage(blogpostEntries) {
 		return getBlogEntry(thumbnail, id, post.title, post.dateString, summary);
 	});
 	return await templates.getBasePage("acikek's blog", "Blogposts written by acikek and friends.", "blog", getMainHeader(2), blogEntries.join(""));
-}
-
-export async function getPrivateKeyData(key) {
-	const data = JSON.parse(fs.readFileSync("private-blogpost-keys.json"));
 }

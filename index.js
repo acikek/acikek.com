@@ -47,21 +47,17 @@ function tryServePrivateBlogpost(res, args) {
 			return false;
 		}
 		const keyData = keys[args[2]];
-		if (!Object.hasOwn(privateBlogposts, args[1])) {
+		if (!("id" in keyData) || keyData.id !== args[1] || !Object.hasOwn(privateBlogposts, args[1])) {
 			return false;
 		}
-		const pageData = privateBlogposts[args[1]];
-		if (!("file" in keyData) || pageData.path != keyData.file) {
-			return false;
-		}
-		const withinLifetime = keyData["created-at"] !== undefined
-			&& moment().diff(moment.unix(keyData["created-at"])) < PRIVATE_BLOGPOST_LIFETIME;
+		const withinLifetime = keyData.createdAt !== undefined
+			&& moment().diff(moment.unix(keyData.createdAt)) < PRIVATE_BLOGPOST_LIFETIME;
 		delete keys[args[2]];
 		fs.writeFileSync("private-blogpost-keys.json", JSON.stringify(keys, null, 4));
 		if (!withinLifetime) {
 			return false;
 		}
-		servePage(res, pageData.page);
+		servePage(res, privateBlogposts[args[1]].page);
 		return true;
 	}
 	catch (e) {
