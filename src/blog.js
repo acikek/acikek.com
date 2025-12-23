@@ -8,14 +8,17 @@ import { getMainHeader } from "./main-page.js";
 
 export const PRIVATE_KEYS_PATH = "private-blogpost-keys.json";
 const PRIVATE_BLOGPOST_LIFETIME = 2 * 24 * 60 * 60 * 1000;
+const SIGNATURE = `<img class="red-img signature" src="/images/logo.svg">`;
 
-async function getBlogpost(id, title, summary, dateString, content) {
+async function getBlogpost(id, title, summary, dateString, notice, content) {
 	const header = templates.pages.blogpostHeader
 		.replace("$title", title)
 		.replace("$summary", summary ? `<summary>${summary}</summary>` : "")
 		.replace("$date", dateString);
-	const filled = content.replace("$signature", `<img class="red-img signature" src="/images/logo.svg">`);
-	return await templates.getBasePage(`${title} - acikek's blog`, summary || "", `blog/${id}`, header, `<div class="blogpost">${filled}</div>`);
+	const postContents = content.replace("$signature", SIGNATURE);
+	const noticeSpan = notice !== null ? `<span class="blogpost-notice">${notice}</span>` : "";
+	const page = `${noticeSpan}<div class="blogpost">${postContents}</div>`;
+	return await templates.getBasePage(`${title} - acikek's blog`, summary || "", `blog/${id}`, header, page);
 }
 
 export async function getBlogpostData(source, filename) {
@@ -28,7 +31,8 @@ export async function getBlogpostData(source, filename) {
 	const date = moment(filenameParts[0]);
 	const dateString = date.format("MMMM Do, YYYY");
 	const id = title.toLowerCase().replaceAll(" ", "-").replaceAll(/[^0-9a-z\-]/g, "");
-	const page = await getBlogpost(id, title, metadata.summary, dateString, content);
+	const notice = source === "private-blogposts" ? "This is a private blogpost—for your eyes only." : null;
+	const page = await getBlogpost(id, title, metadata.summary, dateString, notice, content);
 	return { id, title, date, dateString, page, metadata, path: `${source}/${filename}` };
 }
 
@@ -83,7 +87,9 @@ export function checkPrivateBlogpostKey(privateBlogposts, id, key) {
 		}
 		const withinLifetime = keyData.createdAt !== undefined
 			&& moment().diff(moment.unix(keyData.createdAt)) < PRIVATE_BLOGPOST_LIFETIME;
-		delete keys[key];
+		if (!keyData.forever) {
+			delete keys[key];
+		}
 		fs.writeFileSync(PRIVATE_KEYS_PATH, JSON.stringify(keys, null, 4));
 		if (!withinLifetime) {
 			return false;

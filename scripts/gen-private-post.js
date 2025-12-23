@@ -1,5 +1,9 @@
 #!/bin/node
 
+/**
+ * Usage: ./scripts/gen-private-post.js private-blogposts/<filename> (forever)
+ */
+
 import crypto from "node:crypto";
 import { argv } from "node:process";
 import fs from "node:fs";
@@ -34,6 +38,10 @@ let keys = {
 		id: postData.id,
 		createdAt: moment.now()
 	}
+}
+
+if (argv.length >= 4 && argv[3] === "forever") {
+	keys[postKey].forever = true;
 }
 
 if (fs.existsSync(PRIVATE_KEYS_PATH)) {

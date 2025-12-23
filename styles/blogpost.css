@@ -43,6 +43,13 @@
 	}
 }
 
+.blogpost-notice {
+	display: flex;
+	justify-content: center;
+	font-style: italic;
+	margin-bottom: 1em;
+}
+
 .blogpost {
 	text-indent: 2em;
 	line-height: 2em;

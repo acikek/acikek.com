@@ -18,3 +18,9 @@ This is the source repository for my website. In summary, this project runs a si
 - **`blogposts/`**: blogpost files used to generate both blogpost pages and entries in the blog page. Format: `YYYY-MM-DD_Post Title.html` with arbitrary HTML content.
     - JSON metadata can be included in a comment with the following keys: `summary` and `thumbnail`.
 - **`tools.txt`**: newline-separated entries for the randomly-chosen *'Made with ...*' text in the footer.
+
+## Private Blogposts
+
+Private blogposts are located in the hidden `private-blogposts/` directory using the same `blogposts/` format described above. Private posts can only be accessed with a manually-generated one-time-use private key.
+
+To generate a private key, run `./scripts/gen-private-key.js` and provide the path to the private post. The key will be stored in the `private-blogpost-keys.json` file which is safely managed by the server process.
