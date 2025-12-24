@@ -51,21 +51,57 @@
 }
 
 .blogpost {
-	text-indent: 2em;
-	line-height: 2em;
 	font-size: clamp(70%, 4vw, 100%);
 }
 
 .blogpost p {
+	text-indent: 2em;
+	line-height: 2em;
 	margin: 0;
+}
+
+.blogpost ul {
+	text-indent: 1.5em;
+	line-height: 2em;
+	padding-inline-start: 4em;
+}
+
+.blogpost li span {
+	position: relative;
+	left: -1em;
 }
 
 .blogpost-section+.blogpost-section {
 	padding-top: 2em;
 }
 
+.blogpost-media {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-top: 2em;
+	margin-bottom: 2em;
+}
+
+.blogpost-media img {
+	max-width: 50vw;
+	height: auto;
+}
+
+.blogpost-media summary {
+	font-style: italic;
+}
+
+.blogpost-media img+summary {
+	padding-top: 1em;
+}
+
+.inline-img {
+	height: 1em;
+	vertical-align: middle;
+}
+
 .signature {
 	height: 1em;
-	width: 1em;
 	vertical-align: baseline;
 }

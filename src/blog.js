@@ -16,8 +16,8 @@ async function getBlogpost(id, title, summary, dateString, notice, content) {
 		.replace("$summary", summary ? `<summary>${summary}</summary>` : "")
 		.replace("$date", dateString);
 	const postContents = content.replace("$signature", SIGNATURE);
-	const noticeSpan = notice !== null ? `<span class="blogpost-notice">${notice}</span>` : "";
-	const page = `${noticeSpan}<div class="blogpost">${postContents}</div>`;
+	const noticeSpan = ""; //notice !== null ? `<span class="blogpost-notice">${notice}</span > ` : "";
+	const page = `${noticeSpan} <div class="blogpost">${postContents}</div>`;
 	return await templates.getBasePage(`${title} - acikek's blog`, summary || "", `blog/${id}`, header, page);
 }
 
