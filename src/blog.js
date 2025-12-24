@@ -37,6 +37,9 @@ export async function getBlogpostData(source, filename) {
 }
 
 export async function getBlogpostEntries(source) {
+	if (!fs.existsSync(source)) {
+		return [];
+	}
 	const data = await Promise.all(
 		fs.readdirSync(source)
 			.map(filename => getBlogpostData(source, filename))
