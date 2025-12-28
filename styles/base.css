@@ -8,6 +8,7 @@
 	--black: light-dark(#04030f, #e3d4ce);
 	--red: light-dark(#8b2635, #d35f70);
 	--pink: light-dark(#ef798a, #f6b6c0);
+	--purple: light-dark(#8c429e, #c490d1);
 	--blue: #1a535c;
 }
 
@@ -112,8 +113,14 @@ footer {
 	margin-left: 1em;
 }
 
-.rb {
+.rb,
+.author-red {
 	color: var(--red);
+	font-weight: 700;
+}
+
+.author-purple {
+	color: var(--purple);
 	font-weight: 700;
 }
 

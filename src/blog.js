@@ -10,9 +10,10 @@ export const PRIVATE_KEYS_PATH = "private-blogpost-keys.json";
 const PRIVATE_BLOGPOST_LIFETIME = 2 * 24 * 60 * 60 * 1000;
 const SIGNATURE = `<img class="red-img signature" src="/images/logo.svg">`;
 
-async function getBlogpost(id, title, author, summary, dateString, notice, content) {
+async function getBlogpost(id, title, color, author, summary, dateString, notice, content) {
 	const header = templates.pages.blogpostHeader
 		.replace("$title", title)
+		.replace("$color", color)
 		.replace("$author", author)
 		.replace("$summary", summary ? `<summary>${summary}</summary>` : "")
 		.replace("$date", dateString);
@@ -29,13 +30,14 @@ export async function getBlogpostData(source, filename) {
 	const content = fs.readFileSync(`${source}/${filename}`).toString();
 	const metadataString = /<!--(.*)-->/gm.exec(content)?.[1];
 	const metadata = metadataString ? JSON.parse(metadataString) : {};
+	const color = metadata.color || "rb";
 	const author = metadata.author || "acikek";
 	const date = moment(filenameParts[0]);
 	const dateString = date.format("MMMM Do, YYYY");
 	const id = title.toLowerCase().replaceAll(" ", "-").replaceAll(/[^0-9a-z\-]/g, "");
 	const notice = source === "private-blogposts" ? "This is a private blogpost—for your eyes only." : null;
-	const page = await getBlogpost(id, title, author, metadata.summary, dateString, notice, content);
-	return { id, title, author, date, dateString, page, metadata, path: `${source}/${filename}` };
+	const page = await getBlogpost(id, title, color, author, metadata.summary, dateString, notice, content);
+	return { id, title, color, author, date, dateString, page, metadata, path: `${source}/${filename}` };
 }
 
 export async function getBlogpostEntries(source) {
@@ -57,11 +59,12 @@ function getBlogEntryThumbnail(id, path) {
 		.replace("$path", path);
 }
 
-function getBlogEntry(thumbnail, id, title, author, dateString, summary) {
+function getBlogEntry(thumbnail, id, title, color, author, dateString, summary) {
 	return templates.components.blogEntry
 		.replace("$thumbnail", thumbnail)
 		.replace("$id", id)
 		.replace("$title", title)
+		.replace("$color", color)
 		.replace("$author", author)
 		.replace("$date", dateString)
 		.replace("$summary", summary);
@@ -71,9 +74,8 @@ export async function getBlogPage(blogpostEntries) {
 	const blogEntries = blogpostEntries.map(pair => {
 		const [id, post] = pair;
 		const thumbnail = post.metadata.thumbnail ? getBlogEntryThumbnail(id, post.metadata.thumbnail) : `<div class="blog-entry-thumbnail-empty"></div>`;
-		const author = post.metadata.author ? `<span class="rb">${post.metadata.author}</span>` : "";
 		const summary = post.metadata.summary ? `<span style="color: var(--gray)">•</span> <span>${post.metadata.summary}</span>` : "";
-		return getBlogEntry(thumbnail, id, post.title, author, post.dateString, summary);
+		return getBlogEntry(thumbnail, id, post.title, post.color, post.author, post.dateString, summary);
 	});
 	return await templates.getBasePage("acikek's blog", "Blogposts written by acikek and friends.", "blog", getMainHeader(2), blogEntries.join(""));
 }
